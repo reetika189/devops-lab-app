@@ -10,9 +10,7 @@ pipeline {
   }
 
   // TOOLS — auto-provisioned by Global Tool Config
-  tools {
-    nodejs 'NodeJS-18'
-  }
+  
 
   // PIPELINE STAGES
   stages {
