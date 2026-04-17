@@ -1,65 +1,26 @@
 pipeline {
+    agent any
 
-  // WHERE to run — 'any' = any available agent/node
-  agent any
+    stages {
 
-  // GLOBAL ENV VARIABLES — available in all stages
-  environment {
-    APP_NAME  = 'my-app'
-    VERSION   = '1.0.0'
-  }
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/reetika189/devops-lab-app.git'
+            }
+        }
 
-  // TOOLS — auto-provisioned by Global Tool Config
-  
+        stage('Build') {
+            steps {
+                sh 'chmod +x build.sh'
+                sh './build.sh'
+            }
+        }
 
-  // PIPELINE STAGES
-  stages {
-
-    stage('Checkout') {
-      steps {
-        git branch: 'main',
-            url: 'https://github.com/YOUR/REPO.git'
-      }
     }
 
-    stage('Install') {
-      steps {
-        sh 'npm install'
-      }
+    post {
+        always  { echo 'Pipeline finished.' }
+        success { echo '✅ Build passed!' }
+        failure { echo '❌ Build failed — check logs.' }
     }
-
-    stage('Test') {
-      steps {
-        sh 'npm test'
-      }
-      // What to do if test stage fails
-      post {
-        failure { echo 'Tests failed! Fix before merging.' }
-      }
-    }
-
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
-    }
-
-    stage('Deploy') {
-      // Only deploy from 'main' branch
-      when { branch 'main' }
-      steps {
-        sh './scripts/deploy.sh'
-      }
-    }
-
-  }
-
-  // POST — runs after all stages complete
-  post {
-    always  { echo 'Pipeline finished.' }
-    success { echo '✅ Build passed!' }
-    failure { echo '❌ Build failed — check logs.' }
-    cleanup { cleanWs() }
-  }
-
 }
