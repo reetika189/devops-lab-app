@@ -4,10 +4,10 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps {
-                git 'https://github.com/reetika189/devops-lab-app.git'
-            }
-        }
+    steps {
+        git branch: 'main', url: 'https://github.com/reetika189/devops-lab-app.git'
+    }
+}
 
         stage('Build') {
             steps {
